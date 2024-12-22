@@ -47,7 +47,25 @@ To acces a child root use
 tree.get_child("child name")
 ```
 
-The "show()" and "append_child()" functions return the tree so that this is possible
+To get the name of a root use
+```
+root.name
+```
+To change it use
+```
+root.change_name("new name")
+```
+
+To get the value of a root use
+```
+root.value
+```
+To change it use
+```
+root.change_value(new_value)
+```
+
+The "show()", "append_child()", "change_name()" and "change_value()" functions return the tree so that this is possible
 ```
 tree
 	.append_child(child1)

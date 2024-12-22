@@ -3,37 +3,41 @@ use std::fmt::Debug;
 #[derive(Debug,Clone)]
 pub struct Root{
 	pub name: String,
-	pub value: Val,
+	pub value: Arc<dyn Debug>,
 	pub roots: Vec<Root>
 }
+
 #[derive(Debug,Clone)]
-pub enum Val {
-	Root,
-	Val(Arc<dyn Debug>),
-}
+struct Rootpoint;
+
 pub fn create_tree() -> Root {
-		Root{name: "root".to_string(),value: Val::Root, roots: Vec::new()}
+		Root{name: "root".to_string(),value: Arc::new(Rootpoint), roots: Vec::new()}
 }
 impl Root{
 	pub fn new(name: &str,value: impl Debug + 'static) -> Root{
-		Root {name: name.to_string(),value: Val::Val(Arc::new(value)),roots: Vec::new()}
+		Root {name: name.to_string(),value: Arc::new(value),roots: Vec::new()}
 	}
-	pub fn clone(&self) -> Root{
-		Root {name: self.name.clone(),value:self.value.clone(),roots:self.roots.clone()}
-	}
-	pub fn show(&self,tabs: u8) -> &Self {
+	pub fn show(&mut self,tabs: u8) -> &mut Self {
 		let mut tabstring = String::new();
 		for _ in 0..tabs {
 			tabstring += "\t";
 		}
 		println!("{}{}: {:?}",tabstring,self.name,self.value);
-		for root in &self.roots {
+		for root in &mut self.roots {
 			root.show(tabs + 1);
 		}
 		self
 	}
 	pub fn append_child(&mut self,child: Root) -> &mut Self {
 		self.roots.push(child);
+		self
+	}
+	pub fn change_name(&mut self,name:&str) -> &mut Self {
+		self.name = name.to_string();
+		self
+	}
+	pub fn change_value(&mut self,value: impl Debug + 'static) -> &mut Self {
+		self.value = Arc::new(value);
 		self
 	}
 	pub fn get_child(&mut self,name: &str) -> &mut Root {
