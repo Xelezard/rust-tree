@@ -1,6 +1,11 @@
 # Rust-Tree
 Simple Tree data type for the rust programming language
 
+# Install
+To install run
+```
+cargo add --git="https://github.com/Xelezard/rust-tree" tree
+```
 # Usage
 
 To create a new tree use 
