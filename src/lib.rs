@@ -8,13 +8,11 @@ pub struct Root{
 }
 #[derive(Debug,Clone)]
 pub enum Val {
-	Root(Rootpoint),
+	Root,
 	Val(Arc<dyn Debug>),
 }
-#[derive(Debug,Clone)]
-pub struct Rootpoint;
 pub fn create_tree() -> Root {
-		Root{name: "root".to_string(),value: Val::Root(Rootpoint), roots: Vec::new()}
+		Root{name: "root".to_string(),value: Val::Root, roots: Vec::new()}
 }
 impl Root{
 	pub fn new(name: &str,value: impl Debug + 'static) -> Root{
