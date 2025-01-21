@@ -9,21 +9,21 @@ cargo add --git="https://github.com/Xelezard/rust-tree" tree
 # Usage
 
 To create a new tree use 
-```
-let tree = create_tree()
+```rust
+let tree:Root<type> = create_tree()
 ```
 Every Tree consist of multiple Roots, one being the "Root" Root
 Every Root consist of its name, its value and its roots
-```
-pub struct Root{
+```rust
+pub struct Root<T>{
 	pub name: String,
-	pub value: Val,
-	pub roots: Vec<Root>
+	pub value: Val<T>,
+	pub roots: Vec<Root<T>>
 }
 ```
 
 To visualize a tree use
-```
+```rust
 tree.show(0) // the 0 is important
 ```
 A brand new tree looks like this
@@ -33,12 +33,12 @@ root: Root
 "root" is the name and "Root" is the type
 
 To create a new Root use
-```
-let root: Root = Root::new("Name","Value") // All types that implement the Debug trait can be used as a value
+```rust
+let root: Root = Root::new("Name","Value")
 ```
 
 To append the new root to the tree use:
-```
+```rust
 tree.append_child(root)
 ```
 The tree should now look like this
@@ -48,7 +48,7 @@ root: Root
 ```
 
 To acces a child root use
-```
+```rust
 tree.get_child("child name")
 ```
 
@@ -62,8 +62,8 @@ root.change_name("new name")
 ```
 
 To get the value of a root use
-```
-root.value
+```rust
+root.value.0 // use without the ".0" if you use this on the root root
 ```
 To change it use
 ```

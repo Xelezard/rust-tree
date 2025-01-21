@@ -6,12 +6,11 @@ pub struct Root<T> where T:Debug {
 	pub roots: Vec<Root<T>>
 }
 
-#[derive(Debug,Clone)]
-pub enum Val<T> where T: Debug{
+#[derive(Debug,Clone,PartialEq)]
+pub enum Val<T> where T: Debug {
 	Rootpoint,
 	Val(T)
 }
-
 pub fn create_tree<T>() -> Root<T>where T: Debug {
 		Root{name: "root".to_string(),value: Val::Rootpoint, roots: Vec::new()}
 }
