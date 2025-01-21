@@ -1,21 +1,23 @@
-use std::sync::Arc;
 use std::fmt::Debug;
 #[derive(Debug,Clone)]
-pub struct Root{
+pub struct Root<T> where T:Debug {
 	pub name: String,
-	pub value: Arc<dyn Debug>,
-	pub roots: Vec<Root>
+	pub value: Val<T>,
+	pub roots: Vec<Root<T>>
 }
 
 #[derive(Debug,Clone)]
-struct Rootpoint;
-
-pub fn create_tree() -> Root {
-		Root{name: "root".to_string(),value: Arc::new(Rootpoint), roots: Vec::new()}
+pub enum Val<T> where T: Debug{
+	Rootpoint,
+	Val(T)
 }
-impl Root{
-	pub fn new(name: &str,value: impl Debug + 'static) -> Root{
-		Root {name: name.to_string(),value: Arc::new(value),roots: Vec::new()}
+
+pub fn create_tree<T>() -> Root<T>where T: Debug {
+		Root{name: "root".to_string(),value: Val::Rootpoint, roots: Vec::new()}
+}
+impl<T> Root<T> where T: Debug{
+	pub fn new(name: &str,value: T) -> Root<T>{
+		Root {name: name.to_string(),value: Val::Val(value),roots: Vec::new()}
 	}
 	pub fn show(&mut self,tabs: u8) -> &mut Self {
 		let mut tabstring = String::new();
@@ -28,7 +30,7 @@ impl Root{
 		}
 		self
 	}
-	pub fn append_child(&mut self,child: Root) -> &mut Self {
+	pub fn append_child(&mut self,child: Root<T>) -> &mut Self {
 		self.roots.push(child);
 		self
 	}
@@ -36,11 +38,11 @@ impl Root{
 		self.name = name.to_string();
 		self
 	}
-	pub fn change_value(&mut self,value: impl Debug + 'static) -> &mut Self {
-		self.value = Arc::new(value);
+	pub fn change_value(&mut self,value:T) -> &mut Self {
+		self.value = Val::Val(value);
 		self
 	}
-	pub fn get_child(&mut self,name: &str) -> Option<&mut Root> {
+	pub fn get_child(&mut self,name: &str) -> Option<&mut Root<T>> {
 		for i in 0..self.roots.len() {
 			if self.roots[i].name == name {
 				return Some(&mut self.roots[i])
