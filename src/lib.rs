@@ -40,12 +40,17 @@ impl Root{
 		self.value = Arc::new(value);
 		self
 	}
-	pub fn get_child(&mut self,name: &str) -> &mut Root {
+	pub fn get_child(&mut self,name: &str) -> Option<&mut Root> {
 		for i in 0..self.roots.len() {
 			if self.roots[i].name == name {
-				return &mut self.roots[i]
+				return Some(&mut self.roots[i])
+			}
+			for j in 0..self.roots[i].roots.len() {
+				if self.roots[i].roots[j].name == name {
+					return Some(&mut self.roots[i].roots[j])
+				}
 			}
 		}
-		panic!("No Child Found")
+		None
 	}
 }
