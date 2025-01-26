@@ -10,7 +10,7 @@ cargo add --git="https://github.com/Xelezard/rust-tree" tree
 
 To create a new tree use 
 ```rust
-let tree:Root<type> = create_tree()
+let tree:Root<type> = create_tree("Name")
 ```
 Every Tree consist of multiple Roots, one being the "Root" Root
 Every Root consist of its name, its value and its roots
@@ -57,21 +57,21 @@ To get the name of a root use
 root.name
 ```
 To change it use
-```
+```rust
 root.change_name("new name")
 ```
 
 To get the value of a root use
 ```rust
-root.value.0 // use without the ".0" if you use this on the root root
+root.get_value().unwrap()
 ```
 To change it use
-```
+```rust
 root.change_value(new_value)
 ```
 
 The "show()", "append_child()", "change_name()" and "change_value()" functions return the tree so that this is possible
-```
+```rust
 tree
 	.append_child(child1)
 	.append_child(child2)

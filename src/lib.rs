@@ -8,11 +8,11 @@ pub struct Root<T> where T:Debug {
 
 #[derive(Debug,Clone,PartialEq)]
 pub enum Val<T> where T: Debug {
-	Rootpoint,
+	Rootpoint(String),
 	Val(T)
 }
-pub fn create_tree<T>() -> Root<T>where T: Debug {
-		Root{name: "root".to_string(),value: Val::Rootpoint, roots: Vec::new()}
+pub fn create_tree<T,Q>(name: Q)-> Root<T>where T: Debug, String: From<Q> {
+		Root{name: "root".to_string(),value: Val::Rootpoint(String::from(name)), roots: Vec::new()}
 }
 impl<T> Root<T> where T: Debug{
 	pub fn new(name: &str,value: T) -> Root<T>{
@@ -40,6 +40,12 @@ impl<T> Root<T> where T: Debug{
 	pub fn change_value(&mut self,value:T) -> &mut Self {
 		self.value = Val::Val(value);
 		self
+	}
+	pub fn get_value(&mut self) -> Option<&T> {
+		if let Val::Val(v) = &self.value  {
+			return Some(v);
+		}
+		None
 	}
 	pub fn get_child(&mut self,name: &str) -> Option<&mut Root<T>> {
 		for i in 0..self.roots.len() {
