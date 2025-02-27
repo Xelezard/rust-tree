@@ -77,3 +77,19 @@ tree
 	.append_child(child2)
 	.show(0);
 ```
+# Tree files
+Tree files are file used to construct a 'Root<String>' tree
+
+Create one like this:
+```rust
+let tree = Root::from_tree_file("path")?;
+```
+They are built up like this
+
+```
+key -> value
+key2 -> value2
+| subkey -> subvalue
+|| subsubkey -> subsubvalue
+| subkey2 -> subvalue2
+```

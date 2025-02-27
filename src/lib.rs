@@ -1,4 +1,5 @@
 use std::fmt::Debug;
+use regex::Regex;
 #[derive(Debug,Clone)]
 pub struct Root<T> where T:Debug {
 	pub name: String,
@@ -48,6 +49,9 @@ impl<T> Root<T> where T: Debug{
 		None
 	}
 	pub fn get_child(&mut self,name: &str) -> Option<&mut Root<T>> {
+		if name == "root" {
+			return Some(self);
+		}
 		for i in 0..self.roots.len() {
 			if self.roots[i].name == name {
 				return Some(&mut self.roots[i])
@@ -59,5 +63,24 @@ impl<T> Root<T> where T: Debug{
 			}
 		}
 		None
+	}
+}
+impl Root<String> {
+	pub fn from_tree_file(file_path: &str) -> Result<Root<String>,std::io::Error>{
+		let file = std::fs::read_to_string(file_path)?;
+		let mut result: Root<String> = create_tree("root");
+		let re = Regex::new(r"((?:[ \t]*\|)*)[ \t]*(.+) -> (.+)").unwrap();
+		let caps = re.captures_iter(&file);
+		let mut last: Vec<String> = vec![String::from("root")];
+		for cap in caps {
+			let indents = &cap[1].chars().filter(|c|*c == '|').count();
+			result.get_child(&last[*indents]).unwrap().append_child(Root::new(&cap[2], cap[3].to_string()));
+			if last.len() <= *indents + 1 {
+				last.push(String::from(&cap[2]));
+			} else {
+				last[*indents + 1] = String::from(&cap[2]);	
+			}
+		}
+		Ok(result)
 	}
 }
