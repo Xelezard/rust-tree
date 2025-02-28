@@ -1,5 +1,5 @@
-use std::fmt::Debug;
-use fancy-regex::Regex;
+use std::{fmt::Debug, io::ErrorKind};
+use fancy_regex::Regex;
 #[derive(Debug,Clone)]
 pub struct Root<T> where T:Debug {
 	pub name: String,
@@ -73,12 +73,16 @@ impl Root<String> {
 		let caps = re.captures_iter(&file);
 		let mut last: Vec<String> = vec![String::from("root")];
 		for cap in caps {
-			let indents = &cap[1].chars().filter(|c|*c == '|').count();
-			result.get_child(&last[*indents]).unwrap().append_child(Root::new(&cap[2], cap[3].to_string()));
-			if last.len() <= *indents + 1 {
-				last.push(String::from(&cap[2]));
+			if let Ok(cap) = cap {
+				let indents = &cap[1].chars().filter(|c|*c == '|').count();
+				result.get_child(&last[*indents]).unwrap().append_child(Root::new(&cap[2], cap[3].to_string()));
+				if last.len() <= *indents + 1 {
+					last.push(String::from(&cap[2]));
+				} else {
+					last[*indents + 1] = String::from(&cap[2]);	
+				}	
 			} else {
-				last[*indents + 1] = String::from(&cap[2]);	
+				return Err(std::io::Error::new(ErrorKind::Other, "Invalid .tr file"));
 			}
 		}
 		Ok(result)
