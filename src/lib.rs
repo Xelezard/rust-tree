@@ -48,21 +48,21 @@ impl<T> Root<T> where T: Debug{
 		}
 		None
 	}
-	pub fn get_child(&mut self,name: &str) -> Option<&mut Root<T>> {
+	pub fn get_child(&mut self,name: &str) -> Result<&mut Root<T>,std::fmt::Error> {
 		if name == "root" {
-			return Some(self);
+			return Ok(self);
 		}
 		for i in 0..self.roots.len() {
 			if self.roots[i].name == name {
-				return Some(&mut self.roots[i])
+				return Ok(&mut self.roots[i])
 			}
 			for j in 0..self.roots[i].roots.len() {
 				if self.roots[i].roots[j].name == name {
-					return Some(&mut self.roots[i].roots[j])
+					return Ok(&mut self.roots[i].roots[j])
 				}
 			}
 		}
-		None
+		Err(std::fmt::Error)
 	}
 }
 impl Root<String> {
