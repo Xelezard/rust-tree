@@ -1,5 +1,5 @@
 use std::fmt::Debug;
-use regex::Regex;
+use fancy-regex::Regex;
 #[derive(Debug,Clone)]
 pub struct Root<T> where T:Debug {
 	pub name: String,
@@ -69,7 +69,7 @@ impl Root<String> {
 	pub fn from_tree_file(file_path: &str) -> Result<Root<String>,std::io::Error>{
 		let file = std::fs::read_to_string(file_path)?;
 		let mut result: Root<String> = create_tree("root");
-		let re = Regex::new(r"((?:[ \t]*\|)*)[ \t]*(.+) -> (.+)").unwrap();
+		let re = Regex::new(r"^(?=[^#])((?:[ \t]*\|)*)[ \t]*(.+) -> (.+)").unwrap();
 		let caps = re.captures_iter(&file);
 		let mut last: Vec<String> = vec![String::from("root")];
 		for cap in caps {
